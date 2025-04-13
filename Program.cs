@@ -1,4 +1,6 @@
-﻿namespace ConsoleApp5
+using ConsoleApp5.classes;
+
+namespace ConsoleApp5
 {
 
     internal class Program
