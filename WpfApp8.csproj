@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Me after I fail my math quiz.jfif" />
+    <None Remove="Me-after-I-fail-my-math-quiz.jpg" />
+    <None Remove="Silly Cats Pictures.jfif" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Me after I fail my math quiz.jfif" />
+    <Resource Include="Me-after-I-fail-my-math-quiz.jpg" />
+    <Resource Include="Silly Cats Pictures.jfif" />
+  </ItemGroup>
+
+</Project>
