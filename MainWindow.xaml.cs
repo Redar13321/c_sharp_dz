@@ -18,6 +18,14 @@ namespace WpfApp9
     {
         public MainWindow()
         {
+            object e;
+            e = listToDo;
+            e = groupBoxToDo;
+            e = titleToDo;
+            e = dateToDo;
+            e = descriptionToDo;
+            e = buttonAdd;
+
             InitializeComponent();
         }
     }
