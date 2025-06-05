@@ -25,7 +25,7 @@
                 <DataTemplate>
                     <StackPanel>
                         <TextBlock Text="{Binding Path=Name}"/>
-                        <TextBlock Text="{Binding Path=Date}"/>
+                        <TextBlock Text="{Binding Path=Date, StringFormat=dd.MM.yyyy}"/>
                         <TextBlock FontSize="10"  Text="{Binding Path=Description}"/>
                     </StackPanel>
                 </DataTemplate>
@@ -39,13 +39,13 @@
 				<TextBlock Margin="0,10,0,10">Выпонлить до:</TextBlock>
 				<DatePicker SelectedDate="1.10.2024" Name="dateToDo"/>
 				<TextBlock Margin="0,10,0,10">Описание:</TextBlock>
-                <TextBox Text="Описания нет" Height="130" AcceptsTab="True" AcceptsReturn="True" Name="descriptionToDo" MaxLines="10"/>
+                <TextBox Text="Описания нет" Height="120" AcceptsTab="True" AcceptsReturn="True" Name="descriptionToDo" MaxLines="10"/>
 			</StackPanel>
 		</GroupBox>
-		<Button Background="#5EBEC4" Grid.Row="2" MaxWidth="100" MaxHeight="30" Margin="10, 10, 10, 10">
+		<Button Background="#5EBEC4" Grid.Row="2" MaxWidth="100" MaxHeight="30" Margin="10, 10, 10, 10" Name="buttonDelete" Click="buttonDelete_Click">
 			Удалить дела
 		</Button>
-		<Button Content="Добавить дело" Background="#5EBEC4" Grid.Row="2" Grid.Column="1" MaxWidth="100" MaxHeight="30" Margin="10, 10, 10, 10" Name="buttonAdd">
+		<Button Content="Добавить дело" Background="#5EBEC4" Grid.Row="2" Grid.Column="1" MaxWidth="100" MaxHeight="30" Margin="10, 10, 10, 10" Name="buttonAdd" Click="buttonAdd_Click">
 			<Button.ToolTip>
 				<ToolTip>При добавлении дело появится в списке слева, и его придется выполнить</ToolTip>
 			</Button.ToolTip>
