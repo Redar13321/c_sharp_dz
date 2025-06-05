@@ -1,0 +1,31 @@
+﻿<Window x:Class="WpfApp4.NewToDoWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:WpfApp4"
+		mc:Ignorable="d"
+		Background="#FFFDFAF1"
+		ResizeMode="NoResize"
+		Title="NewToDo" Height="450" Width="400">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="70"/>
+			<RowDefinition/>
+			<RowDefinition Height="70"/>
+		</Grid.RowDefinitions>
+
+		<TextBlock Text="Новое дело" FontSize="24" FontFamily="Arial Black" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+		<StackPanel Grid.Row="1" Background="#FFFDF5DF" Margin="10, 0, 10, 0">
+			<TextBlock Text="Название" Margin="10, 4, 10, 4"/>
+			<TextBox Name="nameInput" Margin="10, 4, 10, 4" MaxLines="1"/>
+			<TextBlock Text="Выполнить до" Margin="10, 4, 10, 4"/>
+            <DatePicker Name="dateInput" SelectedDate="1.10.2024"  Margin="10, 4, 10, 5"/>
+            <TextBlock Text="Описание" Margin="10, 4, 10, 4"/>
+            <TextBox Name="descriptionInput" Margin="10, 4, 10, 4" Text="Описания нету" MaxLines="12" />
+        </StackPanel>
+
+        <Button Name="ButtonSave" Click="ButtonSave_Clicked" Content="Сохранить новое дело" HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" Width="130" Background="#5EBEC4" Grid.Row="2" />
+	</Grid>
+</Window>
