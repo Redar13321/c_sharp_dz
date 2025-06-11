@@ -53,7 +53,12 @@ namespace WpfApp4
 
         public void onSetToDoIsDone(object sender, RoutedEventArgs e)
         {
-            updateBarToDo();
+            ToDo curToDo = (ListBoxToDo.SelectedValue as ToDo);
+            if (curToDo != null)
+            {
+                curToDo.Done = (sender as CheckBox)?.IsChecked ?? curToDo.Done;
+                updateBarToDo();
+            }
         }
 
         void updateBarToDo()

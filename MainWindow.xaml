@@ -22,21 +22,21 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
         <TextBlock Text="Список дел" FontSize="26" Margin="10, 10, 10, 10" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource HeaderStyle}"/>
 
         <DataGrid Name="ListBoxToDo"  Grid.Row="1" Margin="10,0,10,10" Grid.ColumnSpan="2" >
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{Binding Path=Doing, Mode=TwoWay}">
-                    <DataGridCheckBoxColumn.CellStyle>
-                        <Style>
-                            <EventSetter Event="CheckBox.Click" Handler="onSetToDoIsDone"/>
-                        </Style>
-                    </DataGridCheckBoxColumn.CellStyle>
-                </DataGridCheckBoxColumn>
-                    <DataGridTextColumn Width="1*" Binding="{Binding Path=Name}" IsReadOnly="True" />
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding Done}" Click="onSetToDoIsDone"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Width="1*" Binding="{Binding Path=Name}" IsReadOnly="True" />
                 <DataGridTextColumn Width="1*" Binding="{Binding Path=Date, StringFormat=dd.MM.yyyy}" IsReadOnly="True" />
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
