@@ -6,7 +6,7 @@
 		xmlns:local="clr-namespace:WpfApp6"
 		mc:Ignorable="d"
 		WindowState ="Maximized"
-		Title="MainWindow" Height="730" Width="1100">
+		Title="MainWindow" Height="720" Width="1280">
 	<Window.Resources>
 		<Style TargetType="ComboBox">
 			<Setter Property="FontSize" Value="30"/>
