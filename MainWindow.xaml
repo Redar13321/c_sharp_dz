@@ -1,0 +1,65 @@
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <TabControl>
+        <!-- Запуск внешних процессов -->
+        <TabItem Header="Запуск процессов">
+            <StackPanel Margin="10">
+                <TextBlock Text="Запуск Notepad.exe" FontWeight="Bold" FontSize="14"/>
+                <TextBlock x:Name="tbNotepadStatus" Text="Статус: Notepad не запущен" HorizontalAlignment="Center" FontSize="20" Margin="10"/>
+                <Button x:Name="btnStartNotepad" Content="Запустить Notepad" Click="BtnStartNotepad_Click" Width="120" Height="30" Margin="10"/>
+                <Button x:Name="btnKillNotepad" Content="Завершить Notepad" Click="BtnKillNotepad_Click" Width="120" Height="30" IsEnabled="False" Margin="10"/>
+            </StackPanel>
+        </TabItem>
+
+        <!-- Работа с потоками и Dispatcher -->
+        <TabItem Header="Загрузка данных">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Margin="10" Grid.Row="0">
+                    <TextBlock Text="Загрузка данных из файла" FontWeight="Bold" FontSize="14"/>
+                    <Button x:Name="btnLoadData" Content="Начать загрузку" Click="BtnLoadData_Click" Width="120" Height="30" Margin="5"/>
+                    <Button x:Name="btnStopLoading" Content="Остановить" Click="BtnStopLoading_Click" Width="120" Height="30" Margin="5" IsEnabled="False"/>
+                    <ProgressBar x:Name="progressBar" Height="20" Minimum="0" Maximum="100" Margin="5"/>
+                    <TextBlock x:Name="tbProgressStatus" Text="Готов к загрузке" Margin="5" HorizontalAlignment="Center" FontSize="18"/>
+                    <TextBlock x:Name="tbLoadedData" Text="Данные: " TextWrapping="Wrap" Margin="0, 5, 0, 0" HorizontalAlignment="Center" FontSize="16"/>
+                </StackPanel>
+                <ListBox x:Name="lbFiles" Margin="10, -5, 10, 10" Grid.Row="1" VerticalAlignment="Stretch"/>
+            </Grid>
+        </TabItem>
+
+        <!-- Синхронизация через lock -->
+        <TabItem Header="Синхронизация lock">
+            <StackPanel Margin="10">
+                <TextBlock Text="Синхронизация счетчика" FontWeight="Bold" FontSize="14"/>
+                <Button x:Name="btnStartCounter" Content="Запустить потоки" Click="BtnStartCounter_Click" Width="120" Height="30" Margin="5"/>
+                <TextBlock x:Name="tbCounterValue" Text="Счетчик: 0" Margin="5" HorizontalAlignment="Center" FontSize="18"/>
+                <TextBlock x:Name="tbCounterStatus" Text="Статус: Ожидание запуска" Margin="5" HorizontalAlignment="Center" FontSize="16"/>
+            </StackPanel>
+        </TabItem>
+
+        <!-- Семафор для ограничения параллелизма -->
+        <TabItem Header="Семафоры">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Margin="10" Grid.Row="0">
+                    <TextBlock Text="Ограничение параллелизма" FontWeight="Bold" FontSize="14"/>
+                    <Button x:Name="btnStartSemaphore" Content="Запустить потоки" Click="BtnStartSemaphore_Click" Width="120" Height="30" Margin="5"/>
+                    <TextBlock x:Name="tbSemaphoreStatus" Text="Статус: Ожидание запуска" HorizontalAlignment="Center" Margin="5" FontSize="16"/>
+                </StackPanel>
+                <ListBox x:Name="lbSemaphoreLog" Margin="10" Grid.Row="1" VerticalAlignment="Stretch"/>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</Window>
