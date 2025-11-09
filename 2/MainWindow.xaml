@@ -1,0 +1,49 @@
+﻿<Window x:Class="WpfApp5.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp5"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Margin="5">
+                <GroupBox Header="Производитель-Потребитель" Margin="0,5">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,5">
+                            <Button x:Name="btnStartProducer" Content="Запустить Производителя" 
+                                        Click="btnStartProducer_Click" Margin="0,0,5,0"/>
+                            <Button x:Name="btnStartConsumer" Content="Запустить Потребителя" 
+                                        Click="btnStartConsumer_Click" Margin="0,0,5,0"/>
+                            <Button x:Name="btnStopAll" Content="Остановить все" 
+                                        Click="btnStopAll_Click"/>
+                        </StackPanel>
+
+                        <TextBlock x:Name="pcStatus" Text="Статус: Остановлено" Margin="0,5"/>
+
+                        <TextBlock Text="Очередь элементов:" FontWeight="Bold" Margin="0,5,0,5"/>
+                        <ListBox x:Name="queueListBox" Height="100" Margin="0,5"/>
+
+                        <TextBlock Text="Логи обработки:" FontWeight="Bold" Margin="0,5,0,5"/>
+                        <ListBox x:Name="logListBox" Height="100" Margin="0,5"/>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,5">
+                            <TextBlock x:Name="producedCountText" Text="Произведено: 0" Margin="0,0,10,0"/>
+                            <TextBlock x:Name="consumedCountText" Text="Обработано: 0" Margin="0,0,10,0"/>
+                            <TextBlock x:Name="queueSizeText" Text="В очереди: 0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Детали синхронизации" Margin="0,10">
+                    <StackPanel>
+                        <TextBlock x:Name="syncDebugInfo" Text="Детали работы Monitor.Wait/Pulse:" 
+                                           TextWrapping="Wrap" FontSize="10"/>
+                        <ListBox x:Name="syncDebugInfoList" Height="120"/>
+                    </StackPanel>
+            </GroupBox>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

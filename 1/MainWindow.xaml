@@ -1,0 +1,55 @@
+﻿<Window x:Class="WpfApp4.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp4"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Margin="10">
+                <GroupBox Header="1. Гонка данных" Margin="0,5">
+                    <StackPanel>
+                        <TextBlock Text="Демонстрация проблемы без синхронизации:" Margin="0,5"/>
+                        <TextBlock x:Name="raceResult" Text="Результат: Ожидание запуска" Margin="0,5"/>
+                        <TextBlock x:Name="raceExpected" Text="Ожидаемый результат: 2000" Margin="0,5"/>
+                        <TextBlock x:Name="raceStatus" Text="Статус: Готов" Margin="0,5"/>
+                        <Button x:Name="btnStartRace" Content="Запустить гонку данных" 
+                                    Click="btnStartRace_Click" Margin="0,5"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="2. Безопасное добавление с lock" Margin="0,5">
+                    <StackPanel>
+                        <TextBlock Text="Решение проблемы с помощью lock:" Margin="0,5"/>
+                        <ListBox x:Name="safeListBox" Height="120" Margin="0,5"/>
+                        <TextBlock x:Name="safeStatus" Text="Элементов: 0" Margin="0,5"/>
+                        <Button x:Name="btnSafeAdd" Content="Запустить безопасное добавление" 
+                                    Click="btnSafeAdd_Click" Margin="0,5"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="3. Монитор с таймаутом" Margin="0,5">
+                    <StackPanel>
+                        <TextBlock Text="Использование Monitor.TryEnter с таймаутом:" Margin="0,5"/>
+                        <TextBlock x:Name="monitorResult" Text="Результат: Ожидание" Margin="0,5"/>
+                        <TextBlock x:Name="monitorStatus" Text="Статус: Готов" Margin="0,5"/>
+                        <Button x:Name="btnMonitorTest" Content="Проверить монитор с таймаутом" 
+                                    Click="btnMonitorTest_Click" Margin="0,5"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Отладочная информация" Margin="0,5">
+                    <StackPanel>
+                        <TextBlock x:Name="debugInfo" Text="Отладочный журнал:" 
+                                   TextWrapping="Wrap" FontSize="10"/>
+                        <ListBox x:Name="debugInfoList" Height="150"/>
+
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+
+        </ScrollViewer>
+    </Grid>
+</Window>
