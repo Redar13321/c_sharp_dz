@@ -1,34 +1,31 @@
-﻿<Window x:Class="WpfApp2.MainWindow"
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:local="clr-namespace:WpfApp2" mc:Ignorable="d" Title="MainWindow" Height="450" Width="800">
-	<StackPanel Margin="10">
-		<GroupBox Header="1. Поток с прогресс-баром">
-			<StackPanel>
-				<ProgressBar x:Name="progressBar" Minimum="0" Maximum="100" Height="20" Margin="0,5"/>
-				<TextBlock x:Name="progressText" Text="Готов к работе" Margin="0,5"/>
-				<Button x:Name="btnStartProgress" Content="Запустить поток с прогресс-баром" Click="btnStartProgress_Click" Margin="0,5"/>
-			</StackPanel>
-		</GroupBox>
+﻿<Window x:Class="WpfApp3.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp3"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
 
-		<GroupBox Header="2. Поток с высоким приоритетом">
-			<StackPanel>
-				<TextBlock x:Name="priorityText" Text="Приоритет: Normal" Margin="0,5"/>
-				<TextBlock x:Name="priorityCounter" Text="Счетчик: 0" Margin="0,5"/>
-				<Button x:Name="btnStartPriority" Content="Запустить поток с высоким приоритетом" Click="btnStartPriority_Click" Margin="0,5"/>
-			</StackPanel>
-		</GroupBox>
+    <StackPanel Margin="20">
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Доступно разрешений:" Margin="0,0,5,0"/>
+            <TextBlock x:Name="semaphoreStatus" Text="3/3" FontWeight="Bold" Margin="0,0,20,0"/>
+            <TextBlock Text="Ожидающих задач:" Margin="0,0,5,0"/>
+            <TextBlock x:Name="waitingTasks" Text="0" FontWeight="Bold"/>
+        </StackPanel>
 
-		<GroupBox Header="3. Ошибка без Dispatcher">
-			<StackPanel>
-				<TextBlock x:Name="errorText" Text="Нажмите кнопку для демонстрации ошибки" Margin="0,5"/>
-				<Button x:Name="btnCauseError" Content="Попробовать обновить UI без Dispatcher" Click="btnCauseError_Click" Margin="0,5"/>
-			</StackPanel>
-		</GroupBox>
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Height="40">
+            <Button x:Name="btnStartTasks" Content="Запустить 5 задач записи" 
+                    Click="btnStartTasks_Click" Margin="0,0,10,0"/>
+            <Button x:Name="btnClearFile" Content="Очистить файл (WriterLock)" 
+                    Click="btnClearFile_Click" Margin="0,0,10,0"/>
+            <Button x:Name="btnShowFile" Content="Показать содержимое файла" 
+                    Click="btnShowFile_Click"/>
+        </StackPanel>
 
-		<TextBlock x:Name="debugInfo" Text="Информация для отладки:" Margin="0,10" FontSize="10"/>
-		<ListBox x:Name="debugInfoList" Height="150"/>
-	</StackPanel>
+        <GroupBox Header="Логи операций" Margin="0,10" Height="300">
+            <ListBox x:Name="logListBox"/>
+        </GroupBox>
+    </StackPanel>
 </Window>

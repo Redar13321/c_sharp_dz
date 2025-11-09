@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -9,158 +10,161 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WpfApp2
+namespace WpfApp3
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Thread progressThread;
-        private Thread priorityThread;
-        private CancellationTokenSource progressCts;
-        private CancellationTokenSource priorityCts;
+        private readonly SemaphoreSlim _fileSemaphore = new SemaphoreSlim(3, 3);
+        private readonly ReaderWriterLockSlim _fileLock = new ReaderWriterLockSlim();
+        private readonly string _filePath = "shared_file.txt";
+        private int _waitingTasks = 0;
 
         public MainWindow()
         {
             InitializeComponent();
-            progressCts = new CancellationTokenSource();
-            priorityCts = new CancellationTokenSource();
-
-            UpdateDebugInfo("Приложение инициализировано");
+            InitializeFile();
+            UpdateSemaphoreInfo();
+            Log("Приложение инициализировано. Создан семафор с 3 разрешениями.");
         }
 
-        // 1.
-        private void btnStartProgress_Click(object sender, RoutedEventArgs e)
-        {
-            if (progressThread?.IsAlive == true)
-            {
-                progressCts.Cancel();
-                progressThread.Join(500);
-            }
-
-            progressCts = new CancellationTokenSource();
-            progressThread = new Thread(() => UpdateProgressBar(progressCts.Token));
-            progressThread.Name = "ProgressThread";
-            progressThread.IsBackground = true;
-            progressThread.Start();
-
-            UpdateDebugInfo("Запущен поток с прогресс-баром");
-        }
-
-        private void UpdateProgressBar(CancellationToken token)
-        {
-            for (int i = 0; i <= 100; i++)
-            {
-                if (token.IsCancellationRequested)
-                {
-                    Dispatcher.Invoke(() => progressText.Text = "Отменено");
-                    return;
-                }
-
-                Dispatcher.Invoke(() =>
-                {
-                    progressBar.Value = i;
-                    progressText.Text = $"Выполнено: {i}%";
-                });
-
-                Thread.Sleep(50);
-            }
-
-            Dispatcher.Invoke(() => progressText.Text = "Завершено!");
-        }
-
-        // 2
-        private void btnStartPriority_Click(object sender, RoutedEventArgs e)
-        {
-            if (priorityThread?.IsAlive == true)
-            {
-                priorityCts.Cancel();
-                priorityThread.Join(500);
-            }
-
-            priorityCts = new CancellationTokenSource();
-            priorityThread = new Thread(() => HighPriorityWork(priorityCts.Token));
-            priorityThread.Name = "PriorityThread";
-            priorityThread.Priority = ThreadPriority.Normal;
-            priorityThread.IsBackground = true;
-            priorityThread.Start();
-
-            UpdateDebugInfo("Запущен поток с изменяемым приоритетом");
-        }
-
-        private void HighPriorityWork(CancellationToken token)
-        {
-            int counter = 0;
-
-            Dispatcher.Invoke(() => priorityText.Text = "Приоритет: Normal");
-
-            for (int i = 0; i < 50; i++)
-            {
-                if (token.IsCancellationRequested) return;
-                counter++;
-
-                Dispatcher.Invoke(() => priorityCounter.Text = $"Счетчик: {counter}");
-                Thread.Sleep(100);
-            }
-
-            Thread.CurrentThread.Priority = ThreadPriority.Highest;
-            Dispatcher.Invoke(() =>
-            {
-                priorityText.Text = "Приоритет: Highest (изменен во время выполнения)";
-                UpdateDebugInfo("Приоритет потока изменен на Highest");
-            });
-
-            for (int i = 0; i < 50; i++)
-            {
-                if (token.IsCancellationRequested) return;
-                counter++;
-
-                Dispatcher.Invoke(() => priorityCounter.Text = $"Счетчик: {counter}");
-                Thread.Sleep(100);
-            }
-
-            Dispatcher.Invoke(() => priorityText.Text = "Приоритет: Завершено");
-        }
-
-        // 3
-        private void btnCauseError_Click(object sender, RoutedEventArgs e)
-        {
-            Thread errorThread = new Thread(() => UpdateUIWithoutDispatcher());
-            errorThread.Name = "ErrorThread";
-            errorThread.IsBackground = true;
-            errorThread.Start();
-
-            UpdateDebugInfo("Запущен поток для демонстрации ошибки");
-        }
-
-        private void UpdateUIWithoutDispatcher()
+        private void InitializeFile()
         {
             try
             {
-                errorText.Text = "Это вызовет ошибку!";
+                File.WriteAllText(_filePath, "Начальное содержимое файла\n");
+                Log("Файл инициализирован");
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
-                Dispatcher.Invoke(() =>
-                {
-                    errorText.Text = $"Ошибка: {ex.Message}";
-                    UpdateDebugInfo($"Поймана ошибка: {ex.GetType().Name}");
-                });
+                Log($"Ошибка инициализации файла: {ex.Message}");
             }
         }
 
-        private void UpdateDebugInfo(string message)
+        private async void btnStartTasks_Click(object sender, RoutedEventArgs e)
         {
-            debugInfoList.Items.Add($"[{DateTime.Now:HH:mm:ss}] {message}");
+            Log("=== Запуск 5 задач записи ===");
+
+            for (int i = 1; i <= 5; i++)
+            {
+                await StartFileWriteTask(i);
+            }
         }
 
-        protected override void OnClosed(EventArgs e)
+        private async Task StartFileWriteTask(int taskId)
         {
-            progressCts.Cancel();
-            priorityCts.Cancel();
+            Interlocked.Increment(ref _waitingTasks);
+            UpdateSemaphoreInfo();
 
-            base.OnClosed(e);
+            Log($"[Задача {taskId}] Ожидание разрешения...");
+
+            try
+            {
+                await _fileSemaphore.WaitAsync();
+                Interlocked.Decrement(ref _waitingTasks);
+                UpdateSemaphoreInfo();
+
+                Log($"[Задача {taskId}] Разрешение получено. Начало записи...");
+
+                await Task.Delay(2000);
+
+                _fileLock.EnterWriteLock();
+                try
+                {
+                    string content = $"Запись от задачи {taskId} в {DateTime.Now:HH:mm:ss}\n";
+                    await File.AppendAllTextAsync(_filePath, content);
+                    Log($"[Задача {taskId}] Запись завершена: {content.Trim()}");
+                }
+                finally
+                {
+                    _fileLock.ExitWriteLock();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log($"[Задача {taskId}] Ошибка: {ex.Message}");
+            }
+            finally
+            {
+                _fileSemaphore.Release();
+                UpdateSemaphoreInfo();
+                Log($"[Задача {taskId}] Разрешение освобождено");
+            }
+        }
+
+        private async void btnClearFile_Click(object sender, RoutedEventArgs e)
+        {
+            Log("=== Очистка файла с WriterLock ===");
+
+            try
+            {
+                _fileLock.EnterWriteLock();
+                try
+                {
+                    Log("WriterLock захвачен - начинаю очистку файла...");
+                    await File.WriteAllTextAsync(_filePath, $"Файл очищен в {DateTime.Now:HH:mm:ss}\n");
+                    Log("Файл успешно очищен");
+                }
+                finally
+                {
+                    _fileLock.ExitWriteLock();
+                    Log("WriterLock освобожден");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log($"Ошибка при очистке файла: {ex.Message}");
+            }
+        }
+
+        private void btnShowFile_Click(object sender, RoutedEventArgs e)
+        {
+            Log("=== Чтение содержимого файла ===");
+
+            try
+            {
+                _fileLock.EnterReadLock();
+                try
+                {
+                    if (File.Exists(_filePath))
+                    {
+                        string content = File.ReadAllText(_filePath);
+                        Log($"Содержимое файла:\n{content}");
+                    }
+                    else
+                    {
+                        Log("Файл не существует");
+                    }
+                }
+                finally
+                {
+                    _fileLock.ExitReadLock();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log($"Ошибка при чтении файла: {ex.Message}");
+            }
+        }
+
+        private void Log(string message)
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                logListBox.Items.Add($"[{DateTime.Now:HH:mm:ss}] {message}");
+                logListBox.ScrollIntoView(logListBox.Items[logListBox.Items.Count - 1]);
+            }));
+        }
+
+        private void UpdateSemaphoreInfo()
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                semaphoreStatus.Text = $"{_fileSemaphore.CurrentCount}/3";
+                waitingTasks.Text = _waitingTasks.ToString();
+            }));
         }
     }
 }

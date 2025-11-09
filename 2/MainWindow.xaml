@@ -1,36 +1,44 @@
-﻿<Window x:Class="WpfApp3.MainWindow"
+﻿<Window x:Class="WpfApp4.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfApp3"
+        xmlns:local="clr-namespace:WpfApp4"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <StackPanel>
-        <StackPanel Margin="10">
-            <GroupBox Header="Потоки с разными приоритетами" Margin="0,5">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
-                        <TextBlock Text="Lowest: " Width="80" FontWeight="Bold"/>
-                        <TextBlock x:Name="txtLowest" Text="0" Background="#FFE6E6"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
-                        <TextBlock Text="Normal: " Width="80" FontWeight="Bold"/>
-                        <TextBlock x:Name="txtNormal" Text="0" Background="#E6F3FF"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,5">
-                        <TextBlock Text="Highest: " Width="80" FontWeight="Bold"/>
-                        <TextBlock x:Name="txtHighest" Text="0" Background="#E6FFE6"/>
-                    </StackPanel>
+    <StackPanel Margin="10">
 
-                    <Button x:Name="btnStartThreads" Content="Запустить все потоки" 
-                                    Click="btnStartThreads_Click" Margin="0,5"/>
-                    <Button x:Name="btnReset" Content="Сбросить" 
-                                    Click="btnReset_Click" Margin="0,5"/>
-
-                    <TextBlock x:Name="completionStatus" Text="Статус: Ожидание запуска" Margin="0,5"/>
-                </StackPanel>
-            </GroupBox>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,5">
+            <TextBlock Text="Доступно подключений:" Margin="0,0,5,0"/>
+            <TextBlock x:Name="connectionStatus" Text="4/4" FontWeight="Bold" Margin="0,0,10,0"/>
+            <TextBlock Text="Активных операций:" Margin="0,0,5,0"/>
+            <TextBlock x:Name="activeOperations" Text="0" FontWeight="Bold" Margin="0,0,10,0"/>
         </StackPanel>
+
+        <GroupBox Grid.Row="2" Header="Конфигурация БД (ReaderWriterLockSlim)" Margin="0,5">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="Текущая конфигурация:" Width="150"/>
+                    <TextBlock x:Name="currentConfig" Text="Не загружена" FontWeight="Bold"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <Button x:Name="btnReadConfig" Content="Прочитать конфигурацию" 
+                            Click="btnReadConfig_Click" Margin="0,0,5,0"/>
+                    <Button x:Name="btnUpdateConfig" Content="Обновить конфигурацию" 
+                            Click="btnUpdateConfig_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,5">
+            <Button x:Name="btnStartConnections" Content="Запустить 8 подключений" 
+                    Click="btnStartConnections_Click" Margin="0,0,5,0"/>
+            <Button x:Name="btnCheckInstance" Content="Проверить экземпляр (Mutex)" 
+                    Click="btnCheckInstance_Click"/>
+        </StackPanel>
+
+        <GroupBox Grid.Row="4" Header="Логи операций" Margin="0,5" Height="200">
+            <ListBox x:Name="logListBox"/>
+        </GroupBox>
     </StackPanel>
 </Window>
